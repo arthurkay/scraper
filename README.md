@@ -6,6 +6,10 @@
 
 Scraper is a SysAdmin tool that connects to your MySQL database and checks for specific records to clean up your file system
 
+## DEPENDENCY
+
+Requires mysql.connector module to work with the database.
+
 ## CONCLUSION
 
-This tool is still under development, for any queries and contributions. Contact ['mailto:arthur@kalikiti.net'](Arthur) => arthur@kalikiti.net
+This tool is still under development, for any queries and contributions. Contact ['mailto:arthur@kalikiti.net'](Arthur)

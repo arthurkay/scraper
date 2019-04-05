@@ -8,6 +8,9 @@ import mysql.connector as mysql
 import os
 import shutil
 
+# Global variable
+fcount = 0
+
 def error():
     print("Hello, use this program in this form \n")
     print("scraper -u <username> -p <password> -db <database> -h <localhost> -t <db_table_name> -dir <location to store archived files>")
@@ -35,6 +38,9 @@ def file_compare(local_file, db_file_list):
         
         if (db_count == files_count):
             print(local_file + " is redundant and is now being archived")
+            global fcount
+            fcount = fcount + 1
+            print(str(fcount) + " files moved, so far")
             try:
                 shutil.move(local_file.strip(), directory)
             except shutil.Error as err:
@@ -89,7 +95,9 @@ def success():
     finally:
         if db_con.is_connected():
             db_con.close()
+            global fcount
             print("Clean up completed!")
+            print("Moved " + str(fcount) + " files")
 
 if len( sys.argv ) < 12:
    error()
