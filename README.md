@@ -8,4 +8,4 @@ Scraper is a SysAdmin tool that connects to your MySQL database and checks for s
 
 ## CONCLUSION
 
-This tool is still under development, for any queries and contributions. Contact ['mailto:arthur@kalikiti.net']Arthur (arthur@kalikiti.net)
+This tool is still under development, for any queries and contributions. Contact ['mailto:arthur@kalikiti.net'](Arthur) => arthur@kalikiti.net
