@@ -1,0 +1,97 @@
+#!/usr/bin/python
+#   Author:      Arthur Kalikiti
+#   Tool:        Scraper
+#   Description: A tool for cleaning up non existent files
+
+import sys
+import mysql.connector as mysql
+import os
+import shutil
+
+def error():
+    print("Hello, use this program in this form \n")
+    print("scraper -u <username> -p <password> -db <database> -h <localhost> -t <db_table_name> -dir <location to store archived files>")
+    return
+
+def check():
+    list = sys.argv
+    if list.index("-u") and list.index("-p") and list.index("-db") and list.index("-h") and list.index("-t") and list.index("-dir"):
+        success()
+    else:
+        error()
+    
+def file_compare(local_file, db_file_list):
+    print("Checking " + local_file)
+    arguments = sys.argv
+    directory = arguments[ arguments.index("-dir") +1 ]
+    db_count = len(db_file_list)
+    files_count = 0
+    for db_file in db_file_list:
+        if db_file.strip() == local_file.strip():
+            print(local_file + " Matched")
+        else:
+            print(local_file + " does not match " + db_file)
+            files_count += 1
+        
+        if (db_count == files_count):
+            print(local_file + " is redundant and is now being archived")
+            try:
+                shutil.move(local_file.strip(), directory)
+            except shutil.Error as err:
+                print("Oops! "+ err.message)
+def success():
+    list = sys.argv
+
+    user_pos = list.index("-u")
+    user = list[ user_pos + 1 ]
+
+    pass_pos = list.index("-p")
+    passwd = list[ pass_pos + 1 ]
+
+    db_pos = list.index("-db")
+    db = list[ db_pos + 1 ]
+
+    host_pos = list.index("-h")
+    host = list[ host_pos + 1 ]
+
+    table_pos = list.index("-t")
+    db_table = list[ table_pos + 1 ]
+
+    dir_pos = list.index("-dir")
+    directory = list[ dir_pos + 1 ]
+
+    try:
+        db_con = mysql.connect(
+            host = host,
+            user = user,
+            passwd = passwd,
+            database = db
+        )
+
+        db_cursor = db_con.cursor()
+        sqlQuery = "SELECT * FROM "+db_table
+        db_cursor.execute(sqlQuery)
+        data = db_cursor.fetchall()
+
+        records = []
+
+        for row in data:
+            records.append(row[10])
+
+        for local_file in os.listdir(os.getcwd()):
+            file_compare(local_file, records)
+        
+        db_cursor.close()
+
+    except mysql.Error as err:
+        print(format(err.msg))
+    
+    finally:
+        if db_con.is_connected():
+            db_con.close()
+            print("Clean up completed!")
+
+if len( sys.argv ) < 12:
+   error()
+else:
+    check()
