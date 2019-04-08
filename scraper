@@ -82,7 +82,7 @@ def success():
         records = []
 
         for row in data:
-            records.append(row[10])
+            records.append(row[9])
 
         for local_file in os.listdir(os.getcwd()):
             file_compare(local_file, records)
